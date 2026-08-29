@@ -376,6 +376,9 @@ FORMS — white bg, dark labels/text
 .fg select option{background:#FFFFFF;color:#1A1A1A}
 .fg input:focus,.fg select:focus,.fg textarea:focus{border-color:#B8853A;box-shadow:0 0 0 3px rgba(184,133,58,.1)}
 .fg textarea{min-height:108px;resize:vertical}
+.fstatus{margin-top:16px;padding:14px 18px;border-radius:6px;font-size:.85rem;line-height:1.6;display:none}
+.fstatus.ok{background:#F8F7F5;color:#1A1A1A;border:1px solid #B8853A}
+.fstatus.err{background:#FBEAEA;color:#7A2E2E;border:1px solid #CC4444}
 .tabs{display:flex;gap:6px;margin-bottom:28px;background:#F8F7F5;padding:5px;border-radius:12px;border:1px solid #E0DDD8}
 .tab{flex:1;padding:11px 8px;border-radius:6px;font-size:.8rem;color:#666660;background:none;border:none;font-family:inherit;cursor:pointer;transition:all .2s;text-align:center;font-weight:600}
 /* Active tab — dark text on white */

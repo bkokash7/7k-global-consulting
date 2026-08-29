@@ -53,6 +53,7 @@
 </div>
 <div class="fg"><label>Message</label><textarea id="ctm" name="Message" placeholder="Tell us about what you need..."></textarea></div>
 <button class="btn btn-gold" type="submit">Send Message</button>
+<div id="mainFormStatus" class="fstatus"></div>
 </form>
 <div class="cdirect">
 <p>Prefer to email directly?</p>
@@ -61,7 +62,6 @@
 </div>
 </div></section>
 </main>
-<script>mailtoFromForm('mainContactForm','info@7kglobalconsulting.com','Website Inquiry — 7K Global Consulting');</script>
 <div class="ft">
 <div class="wrap fti">
 <div class="ftlogo"><img src="assets/img/logo-7k-white.png" alt="7K Global Consulting"></div>
@@ -75,5 +75,6 @@
 </div>
 </div>
 <script src="assets/js/site.js"></script>
+<script>submitFormViaWeb3Forms('mainContactForm','Website Inquiry — 7K Global Consulting','mainFormStatus');</script>
 </body>
 </html>

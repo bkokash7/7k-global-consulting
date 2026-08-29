@@ -56,37 +56,78 @@ function stab(n){
   });
 }
 
-/* Mailto submission for the construction intake forms */
+/* ============================================================
+   Web3Forms submission (replaces the old mailto: approach)
+   ============================================================ */
+var WEB3FORMS_KEY = '49f318f6-4e76-4075-9f6e-0cbbbe866f00';
 function v(id){ var el = document.getElementById(id); return el ? (el.value || 'Not provided') : 'Not provided'; }
-function sf(n){
-  var em = 'info@7kglobalconsulting.com', sub, body;
-  if(n === 1){
-    sub = 'Construction / Owner Advisory Inquiry — 7K Global Consulting';
-    body = 'Name: '+v('c1n')+'\nEmail: '+v('c1e')+'\nRole: '+v('c1r')+'\nProject Type: '+v('c1t')+'\nCurrent Stage: '+v('c1s')+'\nTier of Interest: '+v('c1ti')+'\nTimeline: '+v('c1tl')+'\nLocation: '+v('c1lo')+'\n\nMessage:\n'+v('c1m');
-  } else if(n === 2){
-    sub = 'Developer Advisory Inquiry — 7K Global Consulting';
-    body = 'Name: '+v('c2n')+'\nEmail: '+v('c2e')+'\nDevelopment Type: '+v('c2t')+'\nNumber of Units: '+v('c2u')+'\n\nMessage:\n'+v('c2m');
+
+function showFormStatus(statusId, ok, isAr){
+  var el = document.getElementById(statusId);
+  if(!el) return;
+  el.style.display = 'block';
+  el.className = 'fstatus ' + (ok ? 'ok' : 'err');
+  if(ok){
+    el.textContent = isAr ? 'شكراً لك — تم إرسال رسالتك. سنتواصل معك قريباً.' : "Thanks \u2014 your message has been sent. We'll follow up directly.";
   } else {
-    sub = 'Maintenance Setup Inquiry — 7K Global Consulting';
-    body = 'Name: '+v('c3n')+'\nEmail: '+v('c3e')+'\nBuilding Type: '+v('c3t')+'\nService Needed: '+v('c3s')+'\n\nMessage:\n'+v('c3m');
+    el.textContent = isAr ? 'حدث خطأ أثناء الإرسال. يرجى مراسلتنا مباشرة على info@7kglobalconsulting.com' : 'Something went wrong sending this \u2014 please email us directly at info@7kglobalconsulting.com.';
   }
-  window.location.href = 'mailto:'+em+'?subject='+encodeURIComponent(sub)+'&body='+encodeURIComponent(body);
+}
+
+async function postToWeb3Forms(payload, statusId, btn){
+  var isAr = document.documentElement.lang === 'ar';
+  var origText = btn ? btn.textContent : null;
+  if(btn){ btn.disabled = true; btn.textContent = isAr ? 'جارٍ الإرسال...' : 'Sending...'; }
+  payload.access_key = WEB3FORMS_KEY;
+  try{
+    var res = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json','Accept':'application/json'},
+      body: JSON.stringify(payload)
+    });
+    var result = await res.json();
+    if(result.success){
+      showFormStatus(statusId, true, isAr);
+      if(btn){ btn.textContent = isAr ? 'تم الإرسال' : 'Sent'; }
+      return true;
+    }
+    throw new Error(result.message || 'failed');
+  } catch(err){
+    showFormStatus(statusId, false, isAr);
+    if(btn){ btn.disabled = false; btn.textContent = origText; }
+    return false;
+  }
+}
+
+/* Construction intake page: tabs 1 (Owner/Construction), 2 (Developer), 3 (Maintenance) */
+function sf(n){
+  var payload = {};
+  var btn;
+  if(n === 1){
+    payload = {subject:'Construction / Owner Advisory Inquiry \u2014 7K Global Consulting', Name:v('c1n'), Email:v('c1e'), Role:v('c1r'), 'Project Type':v('c1t'), 'Current Stage':v('c1s'), 'Tier of Interest':v('c1ti'), Timeline:v('c1tl'), Location:v('c1lo'), Message:v('c1m')};
+    btn = document.querySelector('#f1 button, [onclick="sf(1)"]');
+  } else if(n === 2){
+    payload = {subject:'Developer Advisory Inquiry \u2014 7K Global Consulting', Name:v('c2n'), Email:v('c2e'), 'Development Type':v('c2t'), 'Number of Units':v('c2u'), Message:v('c2m')};
+    btn = document.querySelector('#f2 button, [onclick="sf(2)"]');
+  } else {
+    payload = {subject:'Maintenance Setup Inquiry \u2014 7K Global Consulting', Name:v('c3n'), Email:v('c3e'), 'Building Type':v('c3t'), 'Service Needed':v('c3s'), Message:v('c3m')};
+    btn = document.querySelector('#f3 button, [onclick="sf(3)"]');
+  }
+  postToWeb3Forms(payload, 'fstatus'+n, btn);
   return false;
 }
 
-/* Generic mailto submission for simple single forms (main site contact page) */
-function mailtoFromForm(formId, toEmail, subject){
+/* Generic form submission for simple single forms (main site contact page) */
+function submitFormViaWeb3Forms(formId, subject, statusId){
   var form = document.getElementById(formId);
   if(!form) return;
   form.addEventListener('submit', function(e){
     e.preventDefault();
     var data = new FormData(form);
-    var lines = [];
-    data.forEach(function(val, key){
-      if(val && String(val).trim() !== '') lines.push(key + ': ' + val);
-    });
-    var body = encodeURIComponent(lines.join('\n'));
-    window.location.href = 'mailto:' + encodeURIComponent(toEmail) + '?subject=' + encodeURIComponent(subject) + '&body=' + body;
+    var payload = {subject: subject};
+    data.forEach(function(val, key){ payload[key] = val; });
+    var btn = form.querySelector('button[type="submit"]');
+    postToWeb3Forms(payload, statusId, btn);
   });
 }
 

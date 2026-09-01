@@ -1,4 +1,4 @@
-/* 7K Global Consulting — shared interactive behaviors
+/* 7K Global Consulting - shared interactive behaviors
    (page navigation is now real hrefs; this file only handles
    in-page interactivity: mobile drawer, sticky nav, tier
    accordions, scroll reveal, and the construction intake forms) */
@@ -68,9 +68,9 @@ function showFormStatus(statusId, ok, isAr){
   el.style.display = 'block';
   el.className = 'fstatus ' + (ok ? 'ok' : 'err');
   if(ok){
-    el.textContent = isAr ? 'شكراً لك — تم إرسال رسالتك. سنتواصل معك قريباً.' : "Thanks \u2014 your message has been sent. We'll follow up directly.";
+    el.textContent = isAr ? 'شكراً لك، تم إرسال رسالتك. سنتواصل معك قريباً.' : "Thanks, your message has been sent. We'll follow up directly.";
   } else {
-    el.textContent = isAr ? 'حدث خطأ أثناء الإرسال. يرجى مراسلتنا مباشرة على info@7kglobalconsulting.com' : 'Something went wrong sending this \u2014 please email us directly at info@7kglobalconsulting.com.';
+    el.textContent = isAr ? 'حدث خطأ أثناء الإرسال. يرجى مراسلتنا مباشرة على info@7kglobalconsulting.com' : 'Something went wrong sending this. Please email us directly at info@7kglobalconsulting.com.';
   }
 }
 
@@ -104,13 +104,13 @@ function sf(n){
   var payload = {};
   var btn;
   if(n === 1){
-    payload = {subject:'Construction / Owner Advisory Inquiry \u2014 7K Global Consulting', Name:v('c1n'), Email:v('c1e'), Role:v('c1r'), 'Project Type':v('c1t'), 'Current Stage':v('c1s'), 'Tier of Interest':v('c1ti'), Timeline:v('c1tl'), Location:v('c1lo'), Message:v('c1m')};
+    payload = {subject:'Construction / Owner Advisory Inquiry - 7K Global Consulting', Name:v('c1n'), Email:v('c1e'), Role:v('c1r'), 'Project Type':v('c1t'), 'Current Stage':v('c1s'), 'Tier of Interest':v('c1ti'), Timeline:v('c1tl'), Location:v('c1lo'), Message:v('c1m')};
     btn = document.querySelector('#f1 button, [onclick="sf(1)"]');
   } else if(n === 2){
-    payload = {subject:'Developer Advisory Inquiry \u2014 7K Global Consulting', Name:v('c2n'), Email:v('c2e'), 'Development Type':v('c2t'), 'Number of Units':v('c2u'), Message:v('c2m')};
+    payload = {subject:'Developer Advisory Inquiry - 7K Global Consulting', Name:v('c2n'), Email:v('c2e'), 'Development Type':v('c2t'), 'Number of Units':v('c2u'), Message:v('c2m')};
     btn = document.querySelector('#f2 button, [onclick="sf(2)"]');
   } else {
-    payload = {subject:'Maintenance Setup Inquiry \u2014 7K Global Consulting', Name:v('c3n'), Email:v('c3e'), 'Building Type':v('c3t'), 'Service Needed':v('c3s'), Message:v('c3m')};
+    payload = {subject:'Maintenance Setup Inquiry - 7K Global Consulting', Name:v('c3n'), Email:v('c3e'), 'Building Type':v('c3t'), 'Service Needed':v('c3s'), Message:v('c3m')};
     btn = document.querySelector('#f3 button, [onclick="sf(3)"]');
   }
   postToWeb3Forms(payload, 'fstatus'+n, btn);
